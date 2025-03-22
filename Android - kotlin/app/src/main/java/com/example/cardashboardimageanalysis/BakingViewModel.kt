@@ -22,12 +22,13 @@ class BakingViewModel : ViewModel() {
         apiKey = BuildConfig.apiKey
     )
 
-    // Holds the initial image for fallback.
     private var initialImage: Bitmap? = null
 
     data class Message(
         val text: String,
-        val isUser: Boolean // true if it's from the user, false if it's from Gemini
+        val isUser: Boolean, // true if it's from the user, false if it's from Gemini
+        val imageBitmap: Bitmap? = null
+
     )
 
     private val _messages = MutableStateFlow<List<Message>>(emptyList())
@@ -51,8 +52,9 @@ class BakingViewModel : ViewModel() {
         return stream.toByteArray()
     }
 
+
     fun sendMessage(prompt: String, bitmap: Bitmap? = null) {
-        _messages.value = _messages.value + Message(prompt, isUser = true)
+        _messages.value = _messages.value + Message(prompt, isUser = true, imageBitmap = bitmap)
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -64,25 +66,10 @@ class BakingViewModel : ViewModel() {
                 val contentBuilder = content {
                     // System prompt
                     text("""
-You are an expert automotive assistant helping users interpret car dashboard warning lights and messages. 
-
-Your goal is to:
-- Analyze the dashboard image provided by the user.
-- Help identify and explain any warning indicators or alerts shown.
-- Suggest potential causes or next steps based on the dashboard display.
-- Keep your responses grounded in the visual data and user’s input.
-
-Instructions:
-- Do NOT invent new questions or simulate user input.
-- Never make assumptions without a visual or textual basis.
-- If the image is unclear or not available, explain that and ask the user to provide more detail or a better image.
-- Keep your tone friendly, concise, and informative.
-- Do not respond as if you are the user or write questions pretending to be them.
-
-If you're uncertain about a specific indicator, suggest general possibilities and advise seeing a certified mechanic.
-
-""".trimIndent())
-
+                    You are an expert in automotive diagnostics. Analyze the car dashboard image and help the user understand warning lights, messages, and suggest potential causes or actions.
+                    If unsure, explain possible reasons and advise consulting a professional mechanic.
+                    Be friendly, clear, and helpful.
+                """.trimIndent())
 
                     // ✅ Attach image, from either source
                     when {
@@ -109,9 +96,11 @@ If you're uncertain about a specific indicator, suggest general possibilities an
         }
     }
 
-    // New function to reset the conversation.
     fun resetConversation() {
         _messages.value = emptyList()
         initialImage = null
     }
+
+
+
 }
