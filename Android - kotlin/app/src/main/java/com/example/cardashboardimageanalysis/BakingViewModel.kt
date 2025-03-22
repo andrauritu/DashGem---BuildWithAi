@@ -22,13 +22,12 @@ class BakingViewModel : ViewModel() {
         apiKey = BuildConfig.apiKey
     )
 
+    // Holds the initial image for fallback.
     private var initialImage: Bitmap? = null
 
     data class Message(
         val text: String,
-        val isUser: Boolean, // true if it's from the user, false if it's from Gemini
-        val imageBitmap: Bitmap? = null
-
+        val isUser: Boolean // true if it's from the user, false if it's from Gemini
     )
 
     private val _messages = MutableStateFlow<List<Message>>(emptyList())
@@ -52,9 +51,8 @@ class BakingViewModel : ViewModel() {
         return stream.toByteArray()
     }
 
-
     fun sendMessage(prompt: String, bitmap: Bitmap? = null) {
-        _messages.value = _messages.value + Message(prompt, isUser = true, imageBitmap = bitmap)
+        _messages.value = _messages.value + Message(prompt, isUser = true)
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -65,11 +63,13 @@ class BakingViewModel : ViewModel() {
 
                 val contentBuilder = content {
                     // System prompt
-                    text("""
-                    You are an expert in automotive diagnostics. Analyze the car dashboard image and help the user understand warning lights, messages, and suggest potential causes or actions.
-                    If unsure, explain possible reasons and advise consulting a professional mechanic.
-                    Be friendly, clear, and helpful.
-                """.trimIndent())
+                    text(
+                        """
+                        You are an expert in automotive diagnostics. Analyze the car dashboard image and help the user understand warning lights, messages, and suggest potential causes or actions.
+                        If unsure, explain possible reasons and advise consulting a professional mechanic.
+                        Be friendly, clear, and helpful.
+                        """.trimIndent()
+                    )
 
                     // ✅ Attach image, from either source
                     when {
@@ -96,5 +96,9 @@ class BakingViewModel : ViewModel() {
         }
     }
 
-
+    // New function to reset the conversation.
+    fun resetConversation() {
+        _messages.value = emptyList()
+        initialImage = null
+    }
 }
