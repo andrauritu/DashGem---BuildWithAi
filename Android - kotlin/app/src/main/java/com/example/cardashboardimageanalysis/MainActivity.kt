@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -154,11 +153,16 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     // Main content: display the conversation (chat messages).
+                    val scrollState = rememberScrollState()
+                    // Auto-scroll to the bottom when messages are added.
+                    LaunchedEffect(messages.size) {
+                        scrollState.animateScrollTo(scrollState.maxValue)
+                    }
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)
-                            .verticalScroll(rememberScrollState())
+                            .verticalScroll(scrollState)
                             .padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
