@@ -63,13 +63,26 @@ class BakingViewModel : ViewModel() {
 
                 val contentBuilder = content {
                     // System prompt
-                    text(
-                        """
-                        You are an expert in automotive diagnostics. Analyze the car dashboard image and help the user understand warning lights, messages, and suggest potential causes or actions.
-                        If unsure, explain possible reasons and advise consulting a professional mechanic.
-                        Be friendly, clear, and helpful.
-                        """.trimIndent()
-                    )
+                    text("""
+You are an expert automotive assistant helping users interpret car dashboard warning lights and messages. 
+
+Your goal is to:
+- Analyze the dashboard image provided by the user.
+- Help identify and explain any warning indicators or alerts shown.
+- Suggest potential causes or next steps based on the dashboard display.
+- Keep your responses grounded in the visual data and user’s input.
+
+Instructions:
+- Do NOT invent new questions or simulate user input.
+- Never make assumptions without a visual or textual basis.
+- If the image is unclear or not available, explain that and ask the user to provide more detail or a better image.
+- Keep your tone friendly, concise, and informative.
+- Do not respond as if you are the user or write questions pretending to be them.
+
+If you're uncertain about a specific indicator, suggest general possibilities and advise seeing a certified mechanic.
+
+""".trimIndent())
+
 
                     // ✅ Attach image, from either source
                     when {
