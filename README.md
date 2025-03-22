@@ -2,6 +2,10 @@
 
 **DashGem** is an AI-powered app that helps drivers understand warning lights on their car's dashboard by snapping or uploading a photo. Powered by **Gemini 1.5 Pro**, DashGem delivers accurate, grounded, and chat-style explanations with actionable next steps.
 
+**You can find our demos here:**
+Android (Kotlin) Version https://www.youtube.com/watch?v=hJiWXm2iC38
+IOS & Web (Flutter) Version https://www.youtube.com/watch?v=yGHNkooMWwQ
+
 ---
 
 🛠️ Built with:
