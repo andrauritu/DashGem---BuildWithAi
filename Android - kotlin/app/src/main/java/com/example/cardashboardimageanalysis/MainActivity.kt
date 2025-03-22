@@ -92,7 +92,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         SmallTopAppBar(
-                            title = { Text("Card Dashboard Image Analysis") },
+                            title = { Text("DashGem") },
                             actions = {
                                 IconButton(onClick = { viewModel.resetConversation() }) {
                                     Icon(Icons.Filled.Refresh, contentDescription = "Restart Conversation")
